@@ -113,8 +113,9 @@ def evaluate(
     item_vectors: sp.csr_matrix,
     k: int = 20,
     max_users: int | None = None,
+    split: str = "test",
 ) -> dict[str, Any]:
-    user_idx, targets = data.test_targets()
+    user_idx, targets = data.test_targets() if split == "test" else data.valid_targets()
     if max_users is not None and len(user_idx) > max_users:
         rng = np.random.default_rng(0)
         pick = rng.choice(len(user_idx), size=max_users, replace=False)
@@ -180,6 +181,10 @@ def main() -> None:
     )
     parser.add_argument("--max-users", type=int, default=None)
     parser.add_argument("--output", type=Path, default=None)
+    parser.add_argument(
+        "--merge", action="store_true", help="дополнить существующий JSON вместо перезаписи"
+    )
+    parser.add_argument("--split", choices=["test", "valid"], default="test")
     args = parser.parse_args()
 
     data = load_dataset(args.category)
@@ -190,7 +195,7 @@ def main() -> None:
     for model in build_models(
         [m.strip() for m in args.models.split(",")], category=args.category
     ).values():
-        result = evaluate(model, data, vectors, max_users=args.max_users)
+        result = evaluate(model, data, vectors, max_users=args.max_users, split=args.split)
         results.append(result)
         m = result["metrics"]
         print(f"--- {model.name}")
@@ -199,6 +204,10 @@ def main() -> None:
     results.sort(key=lambda r: r["metrics"]["ndcg@10"], reverse=True)
     out_path = args.output or (ARTIFACTS_DIR / "eval" / f"baselines_{args.category}.json")
     out_path.parent.mkdir(parents=True, exist_ok=True)
+    if args.merge and out_path.exists():
+        previous = {row["model"]: row for row in json.loads(out_path.read_text())}
+        previous.update({row["model"]: row for row in results})
+        results = list(previous.values())
     out_path.write_text(json.dumps(results, indent=2, ensure_ascii=False))
     table = to_markdown(results)
     out_path.with_suffix(".md").write_text(table + "\n")

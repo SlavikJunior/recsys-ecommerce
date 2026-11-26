@@ -44,8 +44,12 @@ class RecommenderService:
         artifacts_dir: Path | None = None,
         redis_url: str | None = None,
         cache_ttl_seconds: int = 60,
+        chaos: str | None = None,
     ) -> None:
         self.category = category
+        # Режим деградации для проверки алертов: tail — отдаёт только хвост
+        # каталога (имитация сломанного релиза), latency — добавляет задержку.
+        self.chaos = chaos
         self.dir = (artifacts_dir or SERVING_DIR) / category
         self.cache_ttl = cache_ttl_seconds
         self._load()
@@ -103,6 +107,10 @@ class RecommenderService:
 
     def recommend(self, user_id: str, k: int = 10) -> tuple[list[Recommendation], str]:
         """Возвращает (рекомендации, источник). Источник важен для мониторинга."""
+        if self.chaos == "tail":
+            tail = np.argsort(self.reference_counts)[: max(1000, k * 100)]
+            pick = np.random.default_rng().choice(tail, size=k, replace=False)
+            return [self._describe(int(i), 1.0) for i in pick], "chaos_tail"
         if self.redis is not None:
             cached = self.redis.get(f"rec:{user_id}:{k}")
             if cached:

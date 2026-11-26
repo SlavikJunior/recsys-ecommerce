@@ -75,12 +75,13 @@ class TwoTowerRecommender(BaseRecommender):
         self,
         dim: int = 64,
         content_dim: int = 64,
-        epochs: int = 12,
-        batch_size: int = 4096,
+        epochs: int = 30,
+        batch_size: int = 8192,
         lr: float = 1e-3,
         temperature: float = 0.07,
         device: str | None = None,
         checkpoint_dir: Path | None = None,
+        use_logq: bool = True,
     ) -> None:
         super().__init__()
         self.dim = dim
@@ -93,6 +94,7 @@ class TwoTowerRecommender(BaseRecommender):
             device or ("mps" if torch.backends.mps.is_available() else "cpu")
         )
         self.checkpoint_dir = checkpoint_dir
+        self.use_logq = use_logq
         self.item_embeddings: np.ndarray | None = None
         self.user_embeddings: np.ndarray | None = None
 
@@ -104,6 +106,13 @@ class TwoTowerRecommender(BaseRecommender):
         content_t = torch.from_numpy(content).to(self.device)
 
         rows, cols = data.train_csr.nonzero()
+        # logQ-коррекция (sampled softmax): in-batch негативы распределены как
+        # популярность, поэтому вычитаем log-вероятность товара, иначе модель
+        # переоценивает хиты и проигрывает CF на хвосте.
+        item_freq = np.clip(data.item_counts, 1e-9, None) ** 0.75
+        log_q = torch.from_numpy(np.log(item_freq / item_freq.sum() + 1e-9).astype(np.float32)).to(
+            self.device
+        )
         users = torch.from_numpy(rows.astype(np.int64))
         items = torch.from_numpy(cols.astype(np.int64))
         n = len(users)
@@ -123,6 +132,8 @@ class TwoTowerRecommender(BaseRecommender):
                 user_vec = net.user_tower(u)
                 item_vec = net.item_tower(i, content_t[i])
                 logits = user_vec @ item_vec.T / self.temperature
+                if self.use_logq:
+                    logits = logits - log_q[i][None, :]
                 # In-batch softmax: позитив для строки r — её собственный товар.
                 # В батче могут встретиться дубликаты товаров — это шум в
                 # негативах, но при batch=4096 доля дубликатов мала.
@@ -197,9 +208,10 @@ class TwoTowerRecommender(BaseRecommender):
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--category", default="Video_Games")
-    parser.add_argument("--epochs", type=int, default=12)
+    parser.add_argument("--epochs", type=int, default=30)
     parser.add_argument("--dim", type=int, default=64)
     parser.add_argument("--no-checkpoint", action="store_true")
+    parser.add_argument("--no-logq", action="store_true")
     args = parser.parse_args()
 
     data = load_dataset(args.category)
@@ -207,6 +219,7 @@ def main() -> None:
         dim=args.dim,
         epochs=args.epochs,
         checkpoint_dir=None if args.no_checkpoint else ARTIFACTS_DIR / "two_tower",
+        use_logq=not args.no_logq,
     )
     model.fit(data)
     assert model.user_embeddings is not None and model.item_embeddings is not None

@@ -14,7 +14,7 @@ import numpy as np
 
 from recsys.config import ARTIFACTS_DIR
 from recsys.data.dataset import load_dataset
-from recsys.eval.evaluate import _content_vectors, build_models
+from recsys.eval.evaluate import build_models
 from recsys.eval.metrics import hit_rank
 
 RNG = np.random.default_rng(1234)
@@ -52,9 +52,7 @@ def mcnemar(hits_a: np.ndarray, hits_b: np.ndarray) -> dict[str, float]:
     k = min(only_a, only_b)
     from math import comb, log
 
-    log_pmf = sum(
-        log(comb(n, i)) - n * log(2) for i in range(0, k + 1)
-    )
+    log_pmf = sum(log(comb(n, i)) - n * log(2) for i in range(0, k + 1))
     p = min(1.0, 2 * float(np.exp(log_pmf)))
     return {"only_a": only_a, "only_b": only_b, "p_value": p}
 
@@ -73,7 +71,6 @@ def main() -> None:
     args = parser.parse_args()
 
     data = load_dataset(args.category)
-    vectors = _content_vectors(data)
     user_idx, targets = data.test_targets()
     models = build_models([args.a, args.b])
 

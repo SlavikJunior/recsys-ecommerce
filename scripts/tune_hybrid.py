@@ -66,7 +66,10 @@ def main() -> None:
         ranks = hit_rank(recs, targets)
         score = ndcg_at_k(ranks, 10)
         results.append({"weights": weights, "ndcg@10": score})
-        print(" + ".join(f"{n}={w}" for (n, _), w in zip(SOURCES, weights, strict=True)), f"-> {score:.4f}")
+        print(
+            " + ".join(f"{n}={w}" for (n, _), w in zip(SOURCES, weights, strict=True)),
+            f"-> {score:.4f}",
+        )
 
     # Плюс чистые источники как контроль: гибрид обязан быть не хуже лучшего из них.
     for i, (name, model) in enumerate(SOURCES):

@@ -80,10 +80,10 @@ def stat(
 
 def service_dashboard() -> dict[str, Any]:
     panels = [
-        stat("RPS", "sum(rate(recsys_requests_total{endpoint=\"recommend\"}[1m]))", 0, 0, 4, 4),
+        stat("RPS", 'sum(rate(recsys_requests_total{endpoint="recommend"}[1m]))', 0, 0, 4, 4),
         stat(
             "p95 latency",
-            "histogram_quantile(0.95, sum by (le) (rate(recsys_request_latency_seconds_bucket{endpoint=\"recommend\"}[1m])))",
+            'histogram_quantile(0.95, sum by (le) (rate(recsys_request_latency_seconds_bucket{endpoint="recommend"}[1m])))',
             4,
             0,
             4,
@@ -97,7 +97,7 @@ def service_dashboard() -> dict[str, Any]:
         ),
         stat(
             "Кэш: hit rate",
-            "sum(rate(recsys_cache_events_total{result=\"hit\"}[1m])) / clamp_min(sum(rate(recsys_cache_events_total[1m])), 1e-9)",
+            'sum(rate(recsys_cache_events_total{result="hit"}[1m])) / clamp_min(sum(rate(recsys_cache_events_total[1m])), 1e-9)',
             8,
             0,
             4,
@@ -169,7 +169,7 @@ def service_dashboard() -> dict[str, Any]:
         ),
         ts(
             "Доля fallback (холодный старт)",
-            "sum(rate(recsys_fallback_total[1m])) / clamp_min(sum(rate(recsys_requests_total{endpoint=\"recommend\"}[1m])), 1e-9)",
+            'sum(rate(recsys_fallback_total[1m])) / clamp_min(sum(rate(recsys_requests_total{endpoint="recommend"}[1m])), 1e-9)',
             0,
             12,
             12,
@@ -179,7 +179,7 @@ def service_dashboard() -> dict[str, Any]:
         ),
         ts(
             "Ошибки API",
-            "sum by (status) (rate(recsys_requests_total{status=\"error\"}[1m]))",
+            'sum by (status) (rate(recsys_requests_total{status="error"}[1m]))',
             12,
             12,
             12,
@@ -239,7 +239,7 @@ def infra_dashboard() -> dict[str, Any]:
         ),
         ts(
             "Свободно на диске, %",
-            "node_filesystem_avail_bytes{mountpoint=\"/System/Volumes/Data\"} / node_filesystem_size_bytes{mountpoint=\"/System/Volumes/Data\"} * 100",
+            'node_filesystem_avail_bytes{mountpoint="/System/Volumes/Data"} / node_filesystem_size_bytes{mountpoint="/System/Volumes/Data"} * 100',
             12,
             8,
             12,
@@ -249,7 +249,7 @@ def infra_dashboard() -> dict[str, Any]:
         ),
         ts(
             "Процессорное время API (user)",
-            "rate(process_cpu_seconds_total{job=\"recsys-api\"}[1m])",
+            'rate(process_cpu_seconds_total{job="recsys-api"}[1m])',
             0,
             16,
             12,
@@ -259,7 +259,7 @@ def infra_dashboard() -> dict[str, Any]:
         ),
         ts(
             "RSS процесса API, МБ",
-            "process_resident_memory_bytes{job=\"recsys-api\"} / 1024 / 1024",
+            'process_resident_memory_bytes{job="recsys-api"} / 1024 / 1024',
             12,
             16,
             12,

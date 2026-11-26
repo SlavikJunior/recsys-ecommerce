@@ -26,6 +26,9 @@ from recsys.serving.registry import ArtifactError, RecommenderService
 
 CATEGORY = os.environ.get("RECSYS_CATEGORY", "Video_Games")
 REDIS_URL = os.environ.get("RECSYS_REDIS_URL", "redis://127.0.0.1:6379/0")
+# Chaos-переключатели нужны только для демонстрации алертов, по умолчанию выключены.
+CHAOS = os.environ.get("RECSYS_CHAOS")
+CHAOS_DELAY_MS = int(os.environ.get("RECSYS_CHAOS_DELAY_MS", "0"))
 
 service: RecommenderService | None = None
 drift: m.DriftMonitor | None = None
@@ -35,7 +38,7 @@ drift: m.DriftMonitor | None = None
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     global service, drift
     try:
-        service = RecommenderService(category=CATEGORY, redis_url=REDIS_URL)
+        service = RecommenderService(category=CATEGORY, redis_url=REDIS_URL, chaos=CHAOS)
     except ArtifactError as exc:
         # Сервис не должен молча стартовать без модели: /health вернёт 503.
         print(f"[startup] {exc}")
@@ -59,6 +62,8 @@ app = FastAPI(title="recsys-ecommerce", version="0.1.0", lifespan=lifespan)
 @contextmanager
 def timed(endpoint: str) -> Iterator[None]:
     started = time.perf_counter()
+    if CHAOS_DELAY_MS:
+        time.sleep(CHAOS_DELAY_MS / 1000)
     try:
         yield
         m.REQUEST_COUNT.labels(endpoint=endpoint, status="ok").inc()
@@ -152,9 +157,7 @@ def similar(item_id: str, k: int = Query(default=10, ge=1, le=50)) -> RecommendR
         user_id="",
         source="item_cf",
         items=[
-            ItemOut(
-                item_id=r.item_id, title=r.title, brand=r.brand, price=r.price, score=r.score
-            )
+            ItemOut(item_id=r.item_id, title=r.title, brand=r.brand, price=r.price, score=r.score)
             for r in recs
         ],
     )

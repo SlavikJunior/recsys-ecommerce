@@ -8,7 +8,6 @@ docs/report.build.md, из которого затем собирается PDF.
 from __future__ import annotations
 
 import json
-from pathlib import Path
 from typing import Any
 
 from recsys.config import ARTIFACTS_DIR, PROJECT_ROOT
@@ -71,12 +70,13 @@ def key_findings(results: list[dict[str, Any]]) -> str:
             f"- Гибрид с подобранными на validation весами: NDCG@10 = {fmt(hybrid)} "
             f"(веса подбирались только на valid, тест не участвовал)."
         )
-    if pop := metric("popularity", "coverage@20"):
-        if cf := metric("item_cf", "coverage@20"):
-            lines.append(
-                f"- Цена точности: popularity покрывает {pop:.1%} каталога, item-CF — "
-                f"{cf:.1%}. Выбор зависит от бизнес-цели, а не от «лучшей» метрики."
-            )
+    pop = metric("popularity", "coverage@20")
+    cf = metric("item_cf", "coverage@20")
+    if pop is not None and cf is not None:
+        lines.append(
+            f"- Цена точности: popularity покрывает {pop:.1%} каталога, item-CF — "
+            f"{cf:.1%}. Выбор зависит от бизнес-цели, а не от «лучшей» метрики."
+        )
     if decay := metric("popularity_decay_30d"):
         lines.append(
             f"- Time-decayed популярность (30 дней) проваливается до NDCG@10 = "
@@ -136,11 +136,11 @@ def summary_numbers(results: list[dict[str, Any]], business: dict[str, Any] | No
     stats = json.loads((PROJECT_ROOT / "data" / "processed" / CATEGORY / "stats.json").read_text())
     loadtest = load("bench.json") or {}
     lines = [
-        f"- Датасет: {business['events'] if business else '—'} сырых событий → "
+        "- Датасет: {business['events'] if business else '—'} сырых событий → "
         f"{stats['train'] + stats['valid'] + stats['test']} после 5-core, "
         f"{stats['users']} пользователей, {stats['items']} товаров.",
-        f"- Обучение two-tower: ~20 c на Apple M4 Pro (MPS); полный offline-прогон "
-        f"десяти моделей — минуты, а не часы.",
+        "- Обучение two-tower: ~20 c на Apple M4 Pro (MPS); полный offline-прогон "
+        "десяти моделей — минуты, а не часы.",
     ]
     if business:
         lines.append(

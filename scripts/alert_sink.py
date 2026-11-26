@@ -11,7 +11,6 @@ import argparse
 import json
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from pathlib import Path
 
 from recsys.config import ARTIFACTS_DIR
 
