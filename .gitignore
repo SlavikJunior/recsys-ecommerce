@@ -31,3 +31,4 @@ artifacts/logs/
 artifacts/serving/
 artifacts/two_tower/
 artifacts/loadtest/
+artifacts/alerts/
