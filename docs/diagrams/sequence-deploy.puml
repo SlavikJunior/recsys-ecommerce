@@ -8,7 +8,7 @@ actor "Разработчик" as Dev
 participant "GitHub" as GH
 participant "Actions: ci" as CI
 participant "Self-hosted runner (macOS)" as CD
-participant "launchd" as L
+participant "Супервизор (tmux)" as L
 participant "API" as A
 participant "Prometheus / Grafana" as M
 
@@ -25,8 +25,8 @@ else проверки прошли
   GH -> CD : workflow_run (deploy)
   CD -> CD : uv sync --frozen
   CD -> CD : deploy/deploy.sh
-  CD -> L : перезапуск com.recsys.api
-  L -> A : uvicorn, загрузка артефактов
+  CD -> L : перезапуск сессии recsys-api
+  L -> A : uvicorn + артефакты из хранилища
   CD -> A : GET /health, GET /recommend
   A --> CD : 200 ok
   CD --> GH : деплой успешен

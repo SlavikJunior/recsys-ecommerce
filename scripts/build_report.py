@@ -28,21 +28,32 @@ def fmt(value: float, digits: int = 4) -> str:
 
 
 def top_table(results: list[dict[str, Any]]) -> str:
-    header = (
-        "| Модель | Recall@10 | NDCG@10 | Recall@20 | NDCG@20 | Coverage@20 | "
-        "Novelty@20 | Diversity@20 | Rank, c |\n"
-        "|---|---|---|---|---|---|---|---|---|\n"
+    """Две таблицы вместо одной широкой: в PDF широкая не влезает по ширине."""
+    ordered = sorted(results, key=lambda r: r["metrics"]["ndcg@10"], reverse=True)
+    accuracy = (
+        "| Модель | Recall@10 | NDCG@10 | Recall@20 | NDCG@20 |\n"
+        "|---|---|---|---|---|\n"
     )
-    rows = []
-    for item in sorted(results, key=lambda r: r["metrics"]["ndcg@10"], reverse=True):
+    quality = (
+        "| Модель | Coverage@20 | Novelty@20 | Diversity@20 | Ранжирование, c |\n"
+        "|---|---|---|---|---|\n"
+    )
+    acc_rows, q_rows = [], []
+    for item in ordered:
         m = item["metrics"]
-        rows.append(
+        acc_rows.append(
             f"| {item['model']} | {fmt(m['recall@10'])} | {fmt(m['ndcg@10'])} | "
-            f"{fmt(m['recall@20'])} | {fmt(m['ndcg@20'])} | {fmt(m['coverage@20'], 3)} | "
+            f"{fmt(m['recall@20'])} | {fmt(m['ndcg@20'])} |"
+        )
+        q_rows.append(
+            f"| {item['model']} | {fmt(m['coverage@20'], 3)} | "
             f"{fmt(m['novelty@20'], 2)} | {fmt(m['diversity@20'], 3)} | "
             f"{m['recommend_seconds']:.0f} |"
         )
-    return header + "\n".join(rows)
+    return (
+        "Точность:\n\n" + accuracy + "\n".join(acc_rows) + "\n\n"
+        "Качество каталога и стоимость:\n\n" + quality + "\n".join(q_rows)
+    )
 
 
 def key_findings(results: list[dict[str, Any]]) -> str:
@@ -122,21 +133,33 @@ def segments_section(results: list[dict[str, Any]]) -> str:
         if name in by_name:
             segment_names = list(by_name[name]["segments"].keys())
             break
+    labels = {
+        "users_5_9": "пользователи 5–9 взаимодействий",
+        "users_10_19": "пользователи 10–19",
+        "users_20_plus": "пользователи 20+",
+        "item_tail_lt50": "товар-хвост (<50 покупок)",
+        "item_mid_50_500": "товар-середина (50–500)",
+        "item_head_500_plus": "товар-голова (500+)",
+    }
     for segment in segment_names:
         values = []
         for name in models:
             item = by_name.get(name)
             value = item["segments"].get(segment) if item else None
             values.append(f"{value['ndcg@10']:.4f}" if value else "—")
-        rows.append(f"| {segment} | " + " | ".join(values) + " |")
-    return header + "\n".join(rows)
+        rows.append(f"| {labels.get(segment, segment)} | " + " | ".join(values) + " |")
+    return (
+        "Сегментный разбор (NDCG@10) — где модели ведут себя по-разному:\n\n"
+        + header
+        + "\n".join(rows)
+    )
 
 
 def summary_numbers(results: list[dict[str, Any]], business: dict[str, Any] | None) -> str:
     stats = json.loads((PROJECT_ROOT / "data" / "processed" / CATEGORY / "stats.json").read_text())
     loadtest = load("bench.json") or {}
     lines = [
-        f"- Датасет: {business['events'] if business else '—'} сырых событий → "
+        f"- Датасет: {business['events'] if business else '—'} сырых событий -> "
         f"{stats['train'] + stats['valid'] + stats['test']} после 5-core, "
         f"{stats['users']} пользователей, {stats['items']} товаров.",
         "- Обучение two-tower: ~20 c на Apple M4 Pro (MPS); полный offline-прогон "

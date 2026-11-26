@@ -33,5 +33,15 @@
     "url": "http://127.0.0.1:9090/alerts",
     "file": "/Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts/screenshots/prometheus-alerts-chaos.png",
     "captured_at": "2026-11-26T13:52:57+0300"
+  },
+  "ci-run": {
+    "url": "https://github.com/SlavikJunior/recsys-ecommerce/actions/runs/45808307896",
+    "file": "/Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts/screenshots/ci-run.png",
+    "captured_at": "2026-11-26T14:20:09+0300"
+  },
+  "cd-run": {
+    "url": "https://github.com/SlavikJunior/recsys-ecommerce/actions/runs/45809452141",
+    "file": "/Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts/screenshots/cd-run.png",
+    "captured_at": "2026-11-26T14:20:15+0300"
   }
 }
