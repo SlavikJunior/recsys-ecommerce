@@ -45,9 +45,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         service = None
         yield
         return
-    drift = m.DriftMonitor(
-        reference=service.drift_reference, popularity=service.reference_counts
-    )
+    drift = m.DriftMonitor(reference=service.drift_reference, popularity=service.reference_counts)
     m.MODEL_INFO.info(
         {
             "category": CATEGORY,

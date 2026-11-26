@@ -17,9 +17,7 @@ import threading
 import numpy as np
 from prometheus_client import Counter, Gauge, Histogram, Info
 
-REQUEST_COUNT = Counter(
-    "recsys_requests_total", "Запросы к API", ["endpoint", "status"]
-)
+REQUEST_COUNT = Counter("recsys_requests_total", "Запросы к API", ["endpoint", "status"])
 REQUEST_LATENCY = Histogram(
     "recsys_request_latency_seconds",
     "Латентность обработки запроса",
@@ -30,9 +28,7 @@ CACHE_EVENTS = Counter("recsys_cache_events_total", "Кэш рекомендац
 FALLBACK_COUNT = Counter(
     "recsys_fallback_total", "Запросы, обслуженные популярностью (холодный старт)"
 )
-IMPRESSIONS = Counter(
-    "recsys_recommended_items_total", "Показы товаров", ["item_id"]
-)
+IMPRESSIONS = Counter("recsys_recommended_items_total", "Показы товаров", ["item_id"])
 FEEDBACK_COUNT = Counter("recsys_feedback_total", "События обратной связи", ["event"])
 CTR_GAUGE = Gauge("recsys_ctr_proxy", "CTR-прокси по событиям feedback")
 COVERAGE_GAUGE = Gauge("recsys_catalog_coverage", "Доля каталога в показах")
@@ -114,9 +110,10 @@ class DriftMonitor:
             actual = self._bin_counts / self._total
         eps = 1e-6
         return float(
-            np.sum((actual - self.reference_shares) * np.log(
-                (actual + eps) / (self.reference_shares + eps)
-            ))
+            np.sum(
+                (actual - self.reference_shares)
+                * np.log((actual + eps) / (self.reference_shares + eps))
+            )
         )
 
     def coverage(self) -> float:
