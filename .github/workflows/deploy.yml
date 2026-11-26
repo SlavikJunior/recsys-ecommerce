@@ -18,6 +18,11 @@ jobs:
       github.event.workflow_run.conclusion == 'success'
     runs-on: [self-hosted, macOS, recsys]
     environment: local
+    env:
+      # Артефакты модели — отдельное хранилище, а не содержимое git-чекаута:
+      # на раннере деплоится код, а артефакты берутся из постоянного каталога.
+      RECSYS_DATA_DIR: /Users/vyacheslav/Documents/se/recsys-ecommerce/data
+      RECSYS_ARTIFACTS_DIR: /Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts
     steps:
       - uses: actions/checkout@v5
 
