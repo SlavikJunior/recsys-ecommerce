@@ -48,7 +48,7 @@ packages = ["src/recsys"]
 line-length = 100
 target-version = "py312"
 src = ["src", "tests"]
-extend-exclude = ["notebooks"]
+extend-exclude = ["notebooks", "docs"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "C4", "PTH"]
