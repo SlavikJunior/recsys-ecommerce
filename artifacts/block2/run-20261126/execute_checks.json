@@ -1,0 +1,40 @@
+{
+  "stage": "Execute self-check; independent Validate still required",
+  "worktree": "/private/tmp/se-block2-recsys",
+  "commands": [
+    {
+      "command": "PYTHONPATH=src existing-venv/python -m pytest",
+      "exit_code": 0,
+      "result": "28 passed in 1.82s"
+    },
+    {
+      "command": "existing-venv/ruff check .",
+      "exit_code": 0
+    },
+    {
+      "command": "existing-venv/ruff format --check .",
+      "exit_code": 0,
+      "result": "50 files already formatted"
+    },
+    {
+      "command": "PYTHONPATH=src existing-venv/python -m mypy",
+      "exit_code": 0,
+      "result": "29 source files; no issues"
+    },
+    {
+      "command": "uv build --out-dir /private/tmp/se-block2-dist",
+      "exit_code": 0,
+      "result": "wheel and sdist"
+    },
+    {
+      "command": "main .venv/bin/python -m pytest tests/test_onetrans.py tests/test_onetrans_api.py tests/test_block2_evaluation.py -q",
+      "exit_code": 0,
+      "result": "12 passed"
+    },
+    {
+      "command": "main .venv/bin/python scripts/onetrans_http_smoke.py --output artifacts/block2/run-20261126 --requests 100",
+      "exit_code": 0,
+      "evidence": "http_smoke.json"
+    }
+  ]
+}

@@ -375,6 +375,8 @@ GET  /health                     — готовность, размер ката
 GET  /metrics                    — Prometheus
 ```
 
+![Swagger UI: контракт сервиса](artifacts/screenshots/api-docs.png)
+
 Фрагменты кода:
 
 ```python

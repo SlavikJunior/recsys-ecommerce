@@ -1,0 +1,249 @@
+{
+  "recorded_at": "2026-11-26T11:33:15.520750+00:00",
+  "base_url": "http://127.0.0.1:8002",
+  "health": {
+    "status": "ok",
+    "model": "onetrans",
+    "device": "cpu",
+    "checkpoint_sha256": "de64463ec829c44e96953379b402494b71a6216fd655446edea43485f8071dc7",
+    "dataset_fingerprint": "7e54eb72439c5153874b91cd51c960670cd6b662c09d68b2c7864e8f8d05b55e",
+    "catalog_items": 26322
+  },
+  "requests": 100,
+  "serial": true,
+  "seconds": 4.7728552499902435,
+  "qps": 20.95181914435901,
+  "latency_seconds": {
+    "p50": 0.04685733349469956,
+    "p95": 0.05246165834978456,
+    "max": 0.06842149997828528
+  },
+  "sample_responses": [
+    {
+      "user_id": "AE27MYC3V4U3JXZUE66BXALWJNQA",
+      "model": "onetrans",
+      "fallback": false,
+      "checkpoint_sha256": "de64463ec829c44e96953379b402494b71a6216fd655446edea43485f8071dc7",
+      "recommendations": [
+        {
+          "item_id": "B01N3ASPNV",
+          "rank": 1
+        },
+        {
+          "item_id": "B087NN2K41",
+          "rank": 2
+        },
+        {
+          "item_id": "B07YBXFDYN",
+          "rank": 3
+        },
+        {
+          "item_id": "B087NNPYP3",
+          "rank": 4
+        },
+        {
+          "item_id": "B00ZDNNRB8",
+          "rank": 5
+        },
+        {
+          "item_id": "B077GG9D5D",
+          "rank": 6
+        },
+        {
+          "item_id": "B019WRM1IA",
+          "rank": 7
+        },
+        {
+          "item_id": "B0C3KYVDWT",
+          "rank": 8
+        },
+        {
+          "item_id": "B000N5Z2L4",
+          "rank": 9
+        },
+        {
+          "item_id": "B004RMK5QG",
+          "rank": 10
+        },
+        {
+          "item_id": "B07624RBWB",
+          "rank": 11
+        },
+        {
+          "item_id": "B00E4MQODC",
+          "rank": 12
+        },
+        {
+          "item_id": "B00K0NV5J2",
+          "rank": 13
+        },
+        {
+          "item_id": "B004LLHFAW",
+          "rank": 14
+        },
+        {
+          "item_id": "B00AKIPBNS",
+          "rank": 15
+        },
+        {
+          "item_id": "B08D3XL1KF",
+          "rank": 16
+        },
+        {
+          "item_id": "B00BGA9WK2",
+          "rank": 17
+        },
+        {
+          "item_id": "B0B9MJK753",
+          "rank": 18
+        },
+        {
+          "item_id": "B0771ZXXV6",
+          "rank": 19
+        },
+        {
+          "item_id": "B00KQHHDZC",
+          "rank": 20
+        }
+      ]
+    },
+    {
+      "user_id": "AE2JNEUF24HREZ2NPAAWY5IIUONQ",
+      "model": "onetrans",
+      "fallback": false,
+      "checkpoint_sha256": "de64463ec829c44e96953379b402494b71a6216fd655446edea43485f8071dc7",
+      "recommendations": [
+        {
+          "item_id": "B01N3ASPNV",
+          "rank": 1
+        },
+        {
+          "item_id": "B07YBXFDYN",
+          "rank": 2
+        },
+        {
+          "item_id": "B087NNPYP3",
+          "rank": 3
+        },
+        {
+          "item_id": "B077GG9D5D",
+          "rank": 4
+        },
+        {
+          "item_id": "B000N5Z2L4",
+          "rank": 5
+        },
+        {
+          "item_id": "B087NN2K41",
+          "rank": 6
+        },
+        {
+          "item_id": "B004RMK5QG",
+          "rank": 7
+        },
+        {
+          "item_id": "B019WRM1IA",
+          "rank": 8
+        },
+        {
+          "item_id": "B00BGA9WK2",
+          "rank": 9
+        },
+        {
+          "item_id": "B004LLHFAW",
+          "rank": 10
+        },
+        {
+          "item_id": "B07624RBWB",
+          "rank": 11
+        },
+        {
+          "item_id": "B0C3KYVDWT",
+          "rank": 12
+        },
+        {
+          "item_id": "B00E4MQODC",
+          "rank": 13
+        },
+        {
+          "item_id": "B00BN5T30E",
+          "rank": 14
+        },
+        {
+          "item_id": "B087SHFL9B",
+          "rank": 15
+        },
+        {
+          "item_id": "B003NSLGW2",
+          "rank": 16
+        },
+        {
+          "item_id": "B07K3KHFSY",
+          "rank": 17
+        },
+        {
+          "item_id": "B08D3XL1KF",
+          "rank": 18
+        },
+        {
+          "item_id": "B0086VPUHI",
+          "rank": 19
+        },
+        {
+          "item_id": "B00ZDNNRB8",
+          "rank": 20
+        }
+      ]
+    }
+  ],
+  "unknown_fallback": {
+    "user_id": "__unknown_smoke__",
+    "model": "popularity",
+    "fallback": true,
+    "checkpoint_sha256": "de64463ec829c44e96953379b402494b71a6216fd655446edea43485f8071dc7",
+    "recommendations": [
+      {
+        "item_id": "B01N3ASPNV",
+        "rank": 1
+      },
+      {
+        "item_id": "B07YBXFDYN",
+        "rank": 2
+      },
+      {
+        "item_id": "B0086VPUHI",
+        "rank": 3
+      },
+      {
+        "item_id": "B00BGA9WK2",
+        "rank": 4
+      },
+      {
+        "item_id": "B000N5Z2L4",
+        "rank": 5
+      },
+      {
+        "item_id": "B00BN5T30E",
+        "rank": 6
+      },
+      {
+        "item_id": "B004RMK5QG",
+        "rank": 7
+      },
+      {
+        "item_id": "B00C1TTF86",
+        "rank": 8
+      },
+      {
+        "item_id": "B07YBWT3PK",
+        "rank": 9
+      },
+      {
+        "item_id": "B077GG9D5D",
+        "rank": 10
+      }
+    ]
+  },
+  "invalid_k_status": 422,
+  "all_rankings_valid_unseen": true
+}

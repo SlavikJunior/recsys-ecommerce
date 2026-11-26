@@ -12,3 +12,7 @@
 {"received_at": "2026-11-26T14:24:30+0300", "status": "firing", "alertname": "RecsysLowCoverage", "severity": "warning", "summary": "Покрытие каталога ниже 50%", "value": ""}
 {"received_at": "2026-11-26T14:30:50+0300", "status": "resolved", "alertname": "RecsysLowCoverage", "severity": "warning", "summary": "Покрытие каталога ниже 50%", "value": ""}
 {"received_at": "2026-11-26T14:30:50+0300", "status": "resolved", "alertname": "RecsysPopularityDrift", "severity": "warning", "summary": "PSI показов выше 0.25 — дрейф интересов", "value": "Похоже на смену спроса или сбой ранжирования. Нужен пересчёт и разбор топ-N."}
+{"received_at": "2026-11-26T14:32:10+0300", "status": "firing", "alertname": "RecsysPopularityDrift", "severity": "warning", "summary": "PSI показов выше 0.25 — дрейф интересов", "value": "Похоже на смену спроса или сбой ранжирования. Нужен пересчёт и разбор топ-N."}
+{"received_at": "2026-11-26T14:36:05+0300", "status": "firing", "alertname": "RecsysLowCoverage", "severity": "warning", "summary": "Покрытие каталога ниже 50%", "value": ""}
+{"received_at": "2026-11-26T14:36:50+0300", "status": "resolved", "alertname": "RecsysPopularityDrift", "severity": "warning", "summary": "PSI показов выше 0.25 — дрейф интересов", "value": "Похоже на смену спроса или сбой ранжирования. Нужен пересчёт и разбор топ-N."}
+{"received_at": "2026-11-26T14:36:55+0300", "status": "resolved", "alertname": "RecsysLowCoverage", "severity": "warning", "summary": "Покрытие каталога ниже 50%", "value": ""}

@@ -43,5 +43,10 @@
     "url": "https://github.com/SlavikJunior/recsys-ecommerce/actions/runs/45809452141",
     "file": "/Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts/screenshots/cd-run.png",
     "captured_at": "2026-11-26T14:20:15+0300"
+  },
+  "api-docs": {
+    "url": "http://127.0.0.1:8000/docs",
+    "file": "/Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts/screenshots/api-docs.png",
+    "captured_at": "2026-11-26T14:37:59+0300"
   }
 }

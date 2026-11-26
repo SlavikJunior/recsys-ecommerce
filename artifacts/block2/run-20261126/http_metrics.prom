@@ -1,0 +1,64 @@
+# HELP onetrans_requests_total HTTP requests
+# TYPE onetrans_requests_total counter
+onetrans_requests_total{path="/health",status="200"} 1.0
+onetrans_requests_total{path="/recommend",status="200"} 101.0
+onetrans_requests_total{path="/recommend",status="422"} 1.0
+# HELP onetrans_requests_created HTTP requests
+# TYPE onetrans_requests_created gauge
+onetrans_requests_created{path="/health",status="200"} 1.7956927907437088e+09
+onetrans_requests_created{path="/recommend",status="200"} 1.7956927908122501e+09
+onetrans_requests_created{path="/recommend",status="422"} 1.795692795519574e+09
+# HELP onetrans_request_seconds HTTP latency
+# TYPE onetrans_request_seconds histogram
+onetrans_request_seconds_bucket{le="0.005",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="0.01",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="0.025",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="0.05",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="0.075",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="0.1",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="0.25",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="0.5",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="0.75",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="1.0",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="2.5",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="5.0",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="7.5",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="10.0",path="/health"} 1.0
+onetrans_request_seconds_bucket{le="+Inf",path="/health"} 1.0
+onetrans_request_seconds_count{path="/health"} 1.0
+onetrans_request_seconds_sum{path="/health"} 0.0016868330130819231
+onetrans_request_seconds_bucket{le="0.005",path="/recommend"} 2.0
+onetrans_request_seconds_bucket{le="0.01",path="/recommend"} 2.0
+onetrans_request_seconds_bucket{le="0.025",path="/recommend"} 2.0
+onetrans_request_seconds_bucket{le="0.05",path="/recommend"} 91.0
+onetrans_request_seconds_bucket{le="0.075",path="/recommend"} 102.0
+onetrans_request_seconds_bucket{le="0.1",path="/recommend"} 102.0
+onetrans_request_seconds_bucket{le="0.25",path="/recommend"} 102.0
+onetrans_request_seconds_bucket{le="0.5",path="/recommend"} 102.0
+onetrans_request_seconds_bucket{le="0.75",path="/recommend"} 102.0
+onetrans_request_seconds_bucket{le="1.0",path="/recommend"} 102.0
+onetrans_request_seconds_bucket{le="2.5",path="/recommend"} 102.0
+onetrans_request_seconds_bucket{le="5.0",path="/recommend"} 102.0
+onetrans_request_seconds_bucket{le="7.5",path="/recommend"} 102.0
+onetrans_request_seconds_bucket{le="10.0",path="/recommend"} 102.0
+onetrans_request_seconds_bucket{le="+Inf",path="/recommend"} 102.0
+onetrans_request_seconds_count{path="/recommend"} 102.0
+onetrans_request_seconds_sum{path="/recommend"} 4.686628961993847
+# HELP onetrans_request_seconds_created HTTP latency
+# TYPE onetrans_request_seconds_created gauge
+onetrans_request_seconds_created{path="/health"} 1.795692790743723e+09
+onetrans_request_seconds_created{path="/recommend"} 1.795692790812261e+09
+# HELP onetrans_cache_events_total Cache events
+# TYPE onetrans_cache_events_total counter
+onetrans_cache_events_total{kind="exact_hits"} 1290.0
+onetrans_cache_events_total{kind="misses"} 10.0
+onetrans_cache_events_total{kind="append_first_layer_kv_reused"} 0.0
+onetrans_cache_events_total{kind="deep_layers_recomputed"} 10.0
+onetrans_cache_events_total{kind="invalidations"} 0.0
+# HELP onetrans_cache_events_created Cache events
+# TYPE onetrans_cache_events_created gauge
+onetrans_cache_events_created{kind="exact_hits"} 1.795692790811871e+09
+onetrans_cache_events_created{kind="misses"} 1.795692790811878e+09
+onetrans_cache_events_created{kind="append_first_layer_kv_reused"} 1.795692790811881e+09
+onetrans_cache_events_created{kind="deep_layers_recomputed"} 1.795692790811884e+09
+onetrans_cache_events_created{kind="invalidations"} 1.795692790811886e+09
