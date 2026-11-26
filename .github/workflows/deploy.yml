@@ -1,0 +1,35 @@
+name: deploy
+
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-local
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: [self-hosted, macOS, recsys]
+    environment: local
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Установить uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+
+      - name: Деплой
+        run: ./deploy/deploy.sh
+
+      - name: Проверка после деплоя
+        run: |
+          curl -fsS http://127.0.0.1:8000/health
+          curl -fsS "http://127.0.0.1:8000/metrics" | grep -c recsys_requests_total

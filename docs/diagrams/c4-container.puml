@@ -1,0 +1,41 @@
+@startuml
+!include <C4/C4_Container>
+skinparam dpi 150
+LAYOUT_LEFT_RIGHT()
+HIDE_STEREOTYPE()
+title RecSys e-commerce — контейнеры (C4 L2)
+
+Person(buyer, "Покупатель")
+
+System_Boundary(recsys, "Рекомендательная система") {
+  Container(api, "API-сервис", "FastAPI, Python 3.12", "Рекомендации, похожие товары, обратная связь")
+  Container(cache, "Кэш рекомендаций", "Redis", "TTL 60 c, инвалидация на покупку")
+  ContainerDb(store, "Хранилище артефактов", "Parquet / NPY / NPZ", "Эмбеддинги, матрица соседей, популярность, манифест")
+  Container(training, "Офлайн-пайплайн", "Python, PyTorch, sklearn", "5-core, сплиты, обучение, сборка артефактов")
+  Container(eval, "Оценка качества", "Python", "Recall, NDCG, coverage, novelty, diversity, сегменты")
+  Container(metrics, "Экспорт метрик", "prometheus-client", "RED-метрики, ML-прокси, PSI-дрейф")
+}
+
+Container(prom, "Prometheus", "TSDB + правила", "Скрейп /metrics каждые 5 c")
+Container(am, "Alertmanager", "v0.35", "Группировка и маршрутизация алертов")
+Container(sink, "Приёмник алертов", "Python HTTP", "Пишет срабатывания в JSONL")
+Container(graf, "Grafana", "Дашборды как код", "Сервис, качество, инфраструктура")
+Container(node, "node_exporter", "Prometheus exporter", "CPU, память, диск")
+Container(ci, "GitHub Actions", "CI/CD", "ruff, mypy, pytest, build, deploy")
+
+Rel(buyer, api, "HTTPS")
+Rel(api, cache, "GET / SET", "Redis")
+Rel(api, store, "читает при старте")
+Rel(training, store, "пишет артефакты")
+Rel(training, eval, "передаёт предсказания")
+Rel(api, metrics, "обновляет")
+Rel(prom, metrics, "скрейпит")
+Rel(prom, node, "скрейпит")
+Rel(prom, am, "отправляет алерты")
+Rel(am, sink, "webhook")
+Rel(graf, prom, "PromQL")
+Rel(ci, api, "деплой через launchd")
+Rel(ci, training, "пересборка артефактов")
+
+LAYOUT_WITH_LEGEND()
+@enduml

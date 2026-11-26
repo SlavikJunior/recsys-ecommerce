@@ -1,0 +1,10 @@
+{
+  "category": "Video_Games",
+  "events": 4624615,
+  "users": 2766656,
+  "items": 137249,
+  "unique_user_item_pairs": 4555500,
+  "repeat_event_share": 0.0149,
+  "users_with_repeat_share": 0.0125,
+  "last_event_is_repeat_share": 0.0125
+}

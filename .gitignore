@@ -1,0 +1,33 @@
+# Данные и артефакты: воспроизводятся скриптами, в git не нужны.
+data/raw/
+data/processed/
+data/cache/
+
+# Артефакты экспериментов: метрики и скрины живут в artifacts/ и коммитятся
+# выборочно, «сырые» прогоны — нет.
+artifacts/tmp/
+artifacts/checkpoints/
+artifacts/eval/*.jsonl
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# Бинарники и рантайм-данные стенда
+deploy/bin/
+deploy/data/
+artifacts/logs/
+artifacts/serving/
+artifacts/two_tower/
+artifacts/loadtest/

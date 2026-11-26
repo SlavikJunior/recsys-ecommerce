@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.recsys.api</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__PROJECT__/.venv/bin/uvicorn</string>
+    <string>recsys.serving.api:app</string>
+    <string>--host</string>
+    <string>127.0.0.1</string>
+    <string>--port</string>
+    <string>8000</string>
+    <string>--workers</string>
+    <string>1</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>__PROJECT__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>RECSYS_CATEGORY</key>
+    <string>Video_Games</string>
+    <key>RECSYS_REDIS_URL</key>
+    <string>redis://127.0.0.1:6379/0</string>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>__PROJECT__/artifacts/logs/api.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>__PROJECT__/artifacts/logs/api.err.log</string>
+</dict>
+</plist>

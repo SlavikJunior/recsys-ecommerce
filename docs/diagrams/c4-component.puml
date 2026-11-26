@@ -1,0 +1,30 @@
+@startuml
+!include <C4/C4_Component>
+skinparam dpi 150
+LAYOUT_LEFT_RIGHT()
+HIDE_STEREOTYPE()
+title API-сервис — компоненты (C4 L3)
+
+Container_Boundary(api, "API-сервис (FastAPI)") {
+  Component(routes, "HTTP-роуты", "FastAPI", "/recommend, /similar, /feedback, /health, /metrics")
+  Component(service, "RecommenderService", "Python", "Загрузка артефактов, ранжирование, fallback, маскирование просмотренного")
+  Component(cache, "Redis-клиент", "redis-py", "TTL-кэш, деградация без кэша")
+  Component(drift, "DriftMonitor", "numpy", "PSI и покрытие каталога по потоку показов")
+  Component(promexp, "Prometheus-экспортёр", "prometheus-client", "Счётчики, гистограммы, gauges")
+}
+
+ContainerDb(artifacts, "Артефакты сервинга", "NPY / NPZ / Parquet", "user_embeddings, item_embeddings, item_similarity, popularity, seen_csr, manifest")
+Container(redis, "Redis", "Кэш", "rec:{user}:{k}")
+Container(prom, "Prometheus", "TSDB", "Скрейп /metrics")
+
+Rel(routes, service, "вызывает")
+Rel(routes, drift, "передаёт показы")
+Rel(routes, promexp, "инкрементирует")
+Rel(service, artifacts, "читает")
+Rel(service, cache, "кэширует")
+Rel(cache, redis, "GET / SETEX")
+Rel(promexp, prom, "отдаёт метрики")
+Rel(prom, promexp, "скрейпит")
+
+LAYOUT_WITH_LEGEND()
+@enduml

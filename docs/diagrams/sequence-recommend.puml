@@ -1,0 +1,41 @@
+@startuml
+skinparam dpi 150
+skinparam maxMessageSize 180
+autonumber
+title Запрос рекомендаций и обратная связь
+
+actor "Клиент" as C
+participant "API (FastAPI)" as A
+participant "Redis" as R
+participant "RecommenderService" as S
+participant "Эмбеддинги (NPY)" as E
+participant "DriftMonitor" as D
+participant "Prometheus" as P
+
+C -> A : GET /recommend/{user_id}?k=10
+A -> R : GET rec:{user}:10
+alt кэш-попадание
+  R --> A : список item_id
+  A --> C : 200, source=cache
+else кэш-промах
+  R --> A : nil
+  A -> S : recommend(user_id, k)
+  S -> E : user_emb x item_emb.T
+  E --> S : скоры по каталогу
+  S -> S : маскирование просмотренного
+  S -> S : top-k через argpartition
+  alt пользователь неизвестен
+    S -> S : fallback на популярное
+    S --> A : items, source=popularity
+  else пользователь известен
+    S -> R : SETEX rec:{user}:10 60s
+    S --> A : items, source=model
+  end
+  A -> D : observe(item_idx)
+  A -> P : impressions, latency, coverage, PSI
+  A --> C : 200, source=model
+end
+C -> A : POST /feedback {click}
+A -> P : feedback_total, ctr_proxy
+A --> C : 202 accepted
+@enduml

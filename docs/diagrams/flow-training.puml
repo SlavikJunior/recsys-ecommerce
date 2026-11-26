@@ -1,0 +1,25 @@
+@startuml
+skinparam dpi 150
+title Офлайн-пайплайн: от сырых отзывов до артефактов сервинга
+
+start
+:Amazon Reviews 2023 (raw jsonl);
+:Парсинг: user_id, item_id, время;
+:5-core фильтрация;
+:Дедупликация пар user-item;
+:Leave-last-out сплит;
+fork
+  :Popularity;
+fork again
+  :Content-based (TF-IDF);
+fork again
+  :Item-CF / User-CF;
+fork again
+  :Two-Tower (PyTorch MPS);
+end fork
+:Гибрид RRF;
+:Оценка: Recall, NDCG, coverage, novelty, diversity;
+:Сегменты и bootstrap;
+:Артефакты сервинга (embeddings, similarity, popularity);
+stop
+@enduml

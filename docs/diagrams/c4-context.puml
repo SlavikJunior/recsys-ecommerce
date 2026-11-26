@@ -1,0 +1,23 @@
+@startuml
+!include <C4/C4_Context>
+skinparam dpi 150
+LAYOUT_TOP_DOWN()
+HIDE_STEREOTYPE()
+title RecSys e-commerce — контекст (C4 L1)
+
+Person(buyer, "Покупатель", "Смотрит каталог, кликает, покупает")
+Person(analyst, "Аналитик", "Смотрит дашборды и метрики качества")
+
+System(recsys, "Рекомендательная система", "Подбирает товары, отдаёт API, собирает обратную связь и метрики")
+
+System_Ext(hf, "Amazon Reviews 2023", "Публичный датасет на Hugging Face")
+System_Ext(gh, "GitHub Actions", "CI/CD пайплайн")
+
+Rel(buyer, recsys, "Запрашивает рекомендации, шлёт клики", "HTTPS / JSON")
+Rel(recsys, buyer, "Показывает подборки", "JSON")
+Rel(analyst, recsys, "Открывает дашборды", "HTTPS")
+Rel(hf, recsys, "Отдаёт отзывы и метаданные", "офлайн")
+Rel(gh, recsys, "Деплоит версию", "launchd")
+
+LAYOUT_WITH_LEGEND()
+@enduml

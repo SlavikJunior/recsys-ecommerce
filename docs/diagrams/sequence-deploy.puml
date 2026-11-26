@@ -1,0 +1,35 @@
+@startuml
+skinparam dpi 150
+skinparam maxMessageSize 180
+autonumber
+title CI/CD: от коммита до работающего сервиса
+
+actor "Разработчик" as Dev
+participant "GitHub" as GH
+participant "Actions: ci" as CI
+participant "Self-hosted runner (macOS)" as CD
+participant "launchd" as L
+participant "API" as A
+participant "Prometheus / Grafana" as M
+
+Dev -> GH : push / pull request
+GH -> CI : запуск workflow ci
+CI -> CI : ruff, ruff format, mypy
+CI -> CI : pytest + coverage
+alt проверки упали
+  CI --> GH : красный статус
+  note right of GH : деплой не запускается
+else проверки прошли
+  CI -> CI : uv build (wheel)
+  CI --> GH : зелёный статус
+  GH -> CD : workflow_run (deploy)
+  CD -> CD : uv sync --frozen
+  CD -> CD : deploy/deploy.sh
+  CD -> L : перезапуск com.recsys.api
+  L -> A : uvicorn, загрузка артефактов
+  CD -> A : GET /health, GET /recommend
+  A --> CD : 200 ok
+  CD --> GH : деплой успешен
+  A -> M : метрики
+end
+@enduml
