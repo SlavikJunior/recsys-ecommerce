@@ -1,0 +1,22 @@
+{
+  "device": "mps",
+  "batch_size": 256,
+  "train_step_count": 12,
+  "train_step_seconds": 0.33682173608394805,
+  "train_examples": 533148,
+  "estimated_epoch_seconds": 701.5996762628638,
+  "scored_users": 10,
+  "catalog_items": 26322,
+  "scoring_seconds": 3.3028970420127735,
+  "estimated_test_seconds": 330.28970420127735,
+  "peak_rss_mb": 947.03125,
+  "cache_counters": {
+    "exact_hits": 120,
+    "misses": 10,
+    "append_first_layer_kv_reused": 0,
+    "deep_layers_recomputed": 10,
+    "invalidations": 0
+  },
+  "model_parameters": 3963041,
+  "mps_allocated_mb": 61.76220703125
+}

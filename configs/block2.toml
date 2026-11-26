@@ -1,0 +1,21 @@
+[model]
+width = 32
+heads = 4
+ns_tokens = 3
+history_length = 32
+pyramid = [8, 0]
+expansion = 2
+
+[experiment]
+seed = 42
+selection_seed = 20261126
+epochs = 3
+batch_size = 256
+negatives = 15
+learning_rate = 0.002
+weight_decay = 0.0001
+validation_users = 256
+test_users = 1000
+candidate_batch = 2048
+metadata = false
+threads = 4

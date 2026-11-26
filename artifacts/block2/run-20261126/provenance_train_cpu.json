@@ -1,0 +1,55 @@
+{
+  "created_at": "2026-11-26T11:06:05.040517+00:00",
+  "category": "Video_Games",
+  "dataset_fingerprint": "7e54eb72439c5153874b91cd51c960670cd6b662c09d68b2c7864e8f8d05b55e",
+  "input_sha256": {
+    "items.parquet": "00788802556751e03befa3afe71878fd439ce661ef2deaa8a871f6452e25a6cd",
+    "test.parquet": "c214d0f31c269d5c3b1383d827725fdf504207b07ac350cc437ad502f70629bf",
+    "train.parquet": "6f88cdfbf3a67ae7d188264d9d50c4e0d987ae17df151a031627bc3b31a78df6",
+    "valid.parquet": "dec63c39158a48b3d8ba12739388b8721b48f9faf42e7dbc4abdd5e81e9a9655"
+  },
+  "source_sha256": {
+    "models/onetrans.py": "64532456c52e9bdc92dee9406fa51c5ae637262ec8fc547271fd2cc4c1417a1a",
+    "models/onetrans_features.py": "af31aa7f49c97d5b1a4601a3b7e78ab9740f9b2be4b0113b476bbafdd466a41e",
+    "models/onetrans_recommender.py": "a861e14b1c9f467f7c8b6b6c0542d426f42337e05303fc34addb54d6ab234611",
+    "eval/block2.py": "48acd741215e97d871c5e72ad781960fd66b3afd2fac7fbb742b399f38d1b102"
+  },
+  "config_sha256": "77ba7f5f379fc73a61ae85f7d614dfd13961f73f2a4c87ba234130d114f526a9",
+  "python": "3.12.15",
+  "torch": "2.15.0",
+  "numpy": "2.5.5",
+  "platform": "macOS-27.2.1-arm64-arm-64bit",
+  "device": "cpu",
+  "users": 95268,
+  "items": 26322,
+  "train_events": 628416,
+  "protocol": "leave-last-out; train-only histories for valid/test; closed-world catalog; train-seen excluded; full catalog scores; fixed uniform users before training",
+  "objective": "sampled next-item softmax; alternatives are not observed negative clicks",
+  "metadata_note": "average_rating/rating_number never used; metadata disabled by default",
+  "architecture": {
+    "width": 32,
+    "heads": 4,
+    "ns_tokens": 3,
+    "history_length": 32,
+    "pyramid": [
+      8,
+      0
+    ],
+    "expansion": 2
+  },
+  "experiment": {
+    "seed": 42,
+    "selection_seed": 20261126,
+    "epochs": 3,
+    "batch_size": 256,
+    "negatives": 15,
+    "learning_rate": 0.002,
+    "weight_decay": 0.0001,
+    "validation_users": 256,
+    "test_users": 1000,
+    "candidate_batch": 2048,
+    "metadata": false,
+    "threads": 4
+  },
+  "selection_sha256": "67c4cdd48119064b04090c879395b5020345be5816b4c3882554b600ded24cfb"
+}

@@ -1,0 +1,6 @@
+{
+  "sha256": "de64463ec829c44e96953379b402494b71a6216fd655446edea43485f8071dc7",
+  "best_valid_ndcg@10": 0.017762052870240227,
+  "epochs": 3,
+  "selection": "valid only"
+}
