@@ -1,5 +1,7 @@
 # recsys-ecommerce
 
+[![ci](https://github.com/SlavikJunior/recsys-ecommerce/actions/workflows/ci.yml/badge.svg)](https://github.com/SlavikJunior/recsys-ecommerce/actions/workflows/ci.yml)
+
 Рекомендательная система для e-commerce на датасете
 [Amazon Reviews 2023](https://huggingface.co/datasets/McAuley-Lab/Amazon-Reviews-2023)
 (категория `Video_Games`): классические подходы, гибрид, two-tower retrieval,
@@ -68,6 +70,12 @@ docs/          диаграммы и отчёт
 
 Разница гибрида и user-CF значима (paired bootstrap, 95% CI [+0.0004; +0.0012]),
 two-tower проигрывает обоим — разбор причин и ограничений в отчёте.
+
+## Отчёт
+
+- PDF: [`docs/report.pdf`](docs/report.pdf) (24 страницы, RU)
+- Исходник: [`docs/report.md`](docs/report.md), сборка — `pandoc + tectonic`
+- Диаграммы: [`docs/diagrams/`](docs/diagrams) (C4 + sequence, PlantUML)
 
 ## Наблюдаемость и деплой
 
