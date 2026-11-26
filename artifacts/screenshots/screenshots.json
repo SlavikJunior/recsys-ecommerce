@@ -3,5 +3,35 @@
     "url": "https://github.com/SlavikJunior/recsys-ecommerce/actions/runs/45795896538",
     "file": "/Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts/screenshots/ci-failed.png",
     "captured_at": "2026-11-26T13:08:45+0300"
+  },
+  "grafana-service": {
+    "url": "http://127.0.0.1:3000/d/recsys-service/recsys-service?orgId=1&kiosk&from=now-30m&to=now&refresh=5s",
+    "file": "/Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts/screenshots/grafana-service.png",
+    "captured_at": "2026-11-26T13:38:36+0300"
+  },
+  "grafana-infra": {
+    "url": "http://127.0.0.1:3000/d/recsys-infra/recsys-infra?orgId=1&kiosk&from=now-30m&to=now&refresh=5s",
+    "file": "/Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts/screenshots/grafana-infra.png",
+    "captured_at": "2026-11-26T13:38:48+0300"
+  },
+  "prometheus-alerts": {
+    "url": "http://127.0.0.1:9090/alerts",
+    "file": "/Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts/screenshots/prometheus-alerts.png",
+    "captured_at": "2026-11-26T13:50:50+0300"
+  },
+  "prometheus-targets": {
+    "url": "http://127.0.0.1:9090/targets",
+    "file": "/Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts/screenshots/prometheus-targets.png",
+    "captured_at": "2026-11-26T13:38:54+0300"
+  },
+  "alertmanager": {
+    "url": "http://127.0.0.1:9093/#/alerts",
+    "file": "/Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts/screenshots/alertmanager.png",
+    "captured_at": "2026-11-26T13:50:55+0300"
+  },
+  "prometheus-alerts-chaos": {
+    "url": "http://127.0.0.1:9090/alerts",
+    "file": "/Users/vyacheslav/Documents/se/recsys-ecommerce/artifacts/screenshots/prometheus-alerts-chaos.png",
+    "captured_at": "2026-11-26T13:52:57+0300"
   }
 }

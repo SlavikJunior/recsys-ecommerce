@@ -80,7 +80,15 @@ def stat(
 
 def service_dashboard() -> dict[str, Any]:
     panels = [
-        stat("RPS", 'sum(rate(recsys_requests_total{endpoint="recommend"}[1m]))', 0, 0, 4, 4),
+        stat(
+            "RPS",
+            'sum(rate(recsys_requests_total{endpoint="recommend"}[1m]))',
+            0,
+            0,
+            4,
+            4,
+            unit="reqps",
+        ),
         stat(
             "p95 latency",
             'histogram_quantile(0.95, sum by (le) (rate(recsys_request_latency_seconds_bucket{endpoint="recommend"}[1m])))',
@@ -201,7 +209,7 @@ def service_dashboard() -> dict[str, Any]:
         "title": "RecSys — сервис и качество",
         "schemaVersion": 39,
         "refresh": "5s",
-        "time": {"from": "now-15m", "to": "now"},
+        "time": {"from": "now-30m", "to": "now"},
         "panels": panels,
     }
 
@@ -220,7 +228,9 @@ def infra_dashboard() -> dict[str, Any]:
         ),
         ts(
             "Память, %",
-            "(1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100",
+            "100 * (node_memory_active_bytes + node_memory_compressed_bytes) / "
+            "(node_memory_active_bytes + node_memory_inactive_bytes + "
+            "node_memory_free_bytes + node_memory_compressed_bytes)",
             12,
             0,
             12,
@@ -248,8 +258,8 @@ def infra_dashboard() -> dict[str, Any]:
             legend="disk free",
         ),
         ts(
-            "Процессорное время API (user)",
-            'rate(process_cpu_seconds_total{job="recsys-api"}[1m])',
+            "CPU-время API, c",
+            "rate(recsys_process_cpu_seconds[1m])",
             0,
             16,
             12,
@@ -259,7 +269,7 @@ def infra_dashboard() -> dict[str, Any]:
         ),
         ts(
             "RSS процесса API, МБ",
-            'process_resident_memory_bytes{job="recsys-api"} / 1024 / 1024',
+            "recsys_process_rss_mb",
             12,
             16,
             12,
@@ -273,7 +283,7 @@ def infra_dashboard() -> dict[str, Any]:
         "title": "RecSys — инфраструктура",
         "schemaVersion": 39,
         "refresh": "5s",
-        "time": {"from": "now-15m", "to": "now"},
+        "time": {"from": "now-30m", "to": "now"},
         "panels": panels,
     }
 

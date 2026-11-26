@@ -136,7 +136,7 @@ def summary_numbers(results: list[dict[str, Any]], business: dict[str, Any] | No
     stats = json.loads((PROJECT_ROOT / "data" / "processed" / CATEGORY / "stats.json").read_text())
     loadtest = load("bench.json") or {}
     lines = [
-        "- Датасет: {business['events'] if business else '—'} сырых событий → "
+        f"- Датасет: {business['events'] if business else '—'} сырых событий → "
         f"{stats['train'] + stats['valid'] + stats['test']} после 5-core, "
         f"{stats['users']} пользователей, {stats['items']} товаров.",
         "- Обучение two-tower: ~20 c на Apple M4 Pro (MPS); полный offline-прогон "

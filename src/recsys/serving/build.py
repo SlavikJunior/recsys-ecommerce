@@ -52,6 +52,16 @@ def build(category: str) -> None:
     sp.save_npz(out / "seen_csr.npz", data.train_csr.tocsr())
     sp.save_npz(out / "item_similarity.npz", item_cf.item_similarity.tocsr())
 
+    # Эталон для PSI: как сервис рекомендует прямо сейчас, а не как товары
+    # покупали исторически. Иначе PSI всегда большой и алерт бесполезен.
+    rng = np.random.default_rng(0)
+    sample = rng.choice(data.n_users, size=min(5000, data.n_users), replace=False)
+    reference_recs = two_tower.recommend(sample, k=10)
+    np.save(
+        out / "rec_reference.npy",
+        np.bincount(reference_recs.ravel(), minlength=data.n_items).astype(np.float32),
+    )
+
     manifest = {
         "category": category,
         "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),

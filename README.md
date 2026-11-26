@@ -55,5 +55,27 @@ docs/          диаграммы и отчёт
 
 ## Результаты
 
-Таблица метрик генерируется в `artifacts/eval/` и вставляется в отчёт.
-Полный отчёт — `docs/report.pdf`.
+Тест: leave-last-out, полный каталог, 95 268 пользователей.
+
+| Модель | Recall@10 | NDCG@10 | Coverage@20 |
+|---|---|---|---|
+| hybrid (RRF, веса с valid) | 0.0555 | 0.0299 | 0.943 |
+| user-CF | 0.0529 | 0.0291 | 0.830 |
+| item-CF | 0.0481 | 0.0261 | 0.992 |
+| two-tower | 0.0381 | 0.0197 | 0.988 |
+| popularity | 0.0249 | 0.0126 | 0.001 |
+| content-based | 0.0176 | 0.0088 | 0.964 |
+
+Разница гибрида и user-CF значима (paired bootstrap, 95% CI [+0.0004; +0.0012]),
+two-tower проигрывает обоим — разбор причин и ограничений в отчёте.
+
+## Наблюдаемость и деплой
+
+```bash
+./scripts/stack.sh start     # Prometheus, Grafana, Alertmanager, node_exporter
+./deploy/deploy.sh           # артефакты + перезапуск API + smoke-тест
+uv run python scripts/screenshot_dashboards.py
+```
+
+Дашборды — `deploy/grafana/dashboards/*.json` (генерируются кодом),
+алерты — `deploy/alerts.yml`. Полный отчёт — `docs/report.pdf`.

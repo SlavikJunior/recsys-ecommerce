@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.recsys.api</string>
+  <!-- Запуск через /bin/sh: на macOS 26+ launchd не даёт напрямую exec
+       неподписанным бинарникам из venv (EX_CONFIG), а системный shell
+       запускает их без проблем. -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>-c</string>
+    <string>cd __PROJECT__ &amp;&amp; .venv/bin/uvicorn recsys.serving.api:app --host 127.0.0.1 --port 8000 --workers 1 >> artifacts/logs/api.out.log 2>&1</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+</dict>
+</plist>

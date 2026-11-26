@@ -297,7 +297,10 @@ Content-based работает сразу, если есть title/бренд/к
 | Холодный старт | fallback на популярность | всплеск нагрузки на fallback |
 | Сеть | локальный стенд, p95 измерен | отсутствие CDN/балансировки |
 
-Измерения и графики — в разделе 11.
+Измеренные значения на локальном стенде (Apple M4 Pro): p50 = 20–22 мс,
+p95 = 57–59 мс, p99 = 75–79 мс при 16 параллельных клиентах и ~600 RPS на
+`/recommend`; с включённым кэшем (TTL 60 c) hit rate достигает 48%.
+Графики — в разделе 11.
 
 ## 9.2 Пересчёт и свежесть
 
@@ -384,6 +387,13 @@ CTR-прокси и конверсия считаются по событиям 
 
 ![Grafana: инфраструктура](artifacts/screenshots/grafana-infra.png)
 
+Отдельно проверено поведение при деградации: API перезапущен с
+`RECSYS_CHAOS=tail` (отдаёт только хвост каталога), после чего PSI вырос с
+0.003 до 17.5, покрытие упало с 17% до 3.8%, кэш почти перестал помогать.
+Это и есть проверка того, что метрики не декоративные:
+
+![Grafana: деградация ранжирования](artifacts/screenshots/grafana-service-chaos.png)
+
 ## 11.3 Алерты
 
 Правила (Prometheus):
@@ -394,8 +404,14 @@ CTR-прокси и конверсия считаются по событиям 
 - `RecsysLowCoverage` — покрытие < 50%;
 - `RecsysHighFallbackRate` — > 30% запросов на популярность.
 
-Проверено намеренной деградацией: задержка инъекции и сдвиг потока показов
-приводят к `firing`, событие доходит до Alertmanager и приёмника.
+Проверено намеренной деградацией — двумя независимыми сценариями:
+
+1. `RECSYS_CHAOS_DELAY_MS=250` — p95 поднимается до ~280 мс, через минуту
+   срабатывает `RecsysHighLatencyP95`;
+2. `RECSYS_CHAOS=tail` — PSI уходит в 17.5, срабатывает `RecsysPopularityDrift`.
+
+Событие доходит до Alertmanager и локального приёмника, а не только до UI
+Prometheus.
 
 ![Prometheus: алерты](artifacts/screenshots/prometheus-alerts.png)
 
@@ -410,12 +426,22 @@ CTR-прокси и конверсия считаются по событиям 
 
 Деплой (`.github/workflows/deploy.yml`): после зелёного CI на `main`
 self-hosted runner запускает `deploy/deploy.sh`: зависимости, артефакты,
-launchd, smoke-тест `/health` и `/recommend`. Неуспешный smoke-тест валит
-деплой.
+перезапуск сервиса, smoke-тест `/health` и `/recommend`. Неуспешный
+smoke-тест валит деплой.
 
-![GitHub Actions: прогон](artifacts/screenshots/ci-run.png)
+![GitHub Actions: зелёный прогон](artifacts/screenshots/ci-run.png)
 
-Проверен и красный сценарий: сломанный тест останавливает пайплайн до деплоя.
+Красный сценарий — не имитация: первый прогон действительно упал на линтере
+(ruff проверяет и `scripts/`, а локально проверялись только `src` и `tests`),
+и деплой после него не запустился.
+
+![GitHub Actions: красный прогон](artifacts/screenshots/ci-failed.png)
+
+Ограничение среды: на этой машине `launchd` не запускает неподписанные
+venv-бинарники из `~/Documents` (exit 78, `EX_CONFIG`), поэтому в
+`deploy.sh` сервис поднимается в tmux-сессии. Plist для launchd приложен
+(`deploy/launchd/`) и используется на CI-раннере, где каталог не защищён;
+контракт деплоя от этого не меняется — перезапуск плюс проверка здоровья.
 
 # 13. Ограничения и что бы улучшили
 
@@ -460,5 +486,5 @@ uv run python scripts/loadtest.py --mode traffic --seconds 300
 uv run python scripts/screenshot_dashboards.py
 ```
 
-Ссылки: репозиторий {{REPO_URL}}; метрики — `artifacts/eval/`; скрины —
+Ссылки: репозиторий https://github.com/SlavikJunior/recsys-ecommerce; метрики — `artifacts/eval/`; скрины —
 `artifacts/screenshots/`; дашборды как код — `deploy/grafana/dashboards/`.

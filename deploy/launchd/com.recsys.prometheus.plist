@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.recsys.prometheus</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/opt/prometheus/bin/prometheus</string>
+    <string>--config.file=__PROJECT__/deploy/prometheus.yml</string>
+    <string>--storage.tsdb.path=__PROJECT__/deploy/data/prometheus</string>
+    <string>--web.listen-address=127.0.0.1:9090</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>__PROJECT__</string>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>__PROJECT__/artifacts/logs/prometheus.log</string>
+  <key>StandardErrorPath</key>
+  <string>__PROJECT__/artifacts/logs/prometheus.err.log</string>
+</dict>
+</plist>

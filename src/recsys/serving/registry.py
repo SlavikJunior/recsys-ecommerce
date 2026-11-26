@@ -75,6 +75,10 @@ class RecommenderService:
         self.seen = sp.load_npz(self.dir / "seen_csr.npz").tocsr()
         self.item_similarity = sp.load_npz(self.dir / "item_similarity.npz").tocsr()
         self.reference_counts = np.load(self.dir / "item_counts.npy")
+        drift_path = self.dir / "rec_reference.npy"
+        self.drift_reference = (
+            np.load(drift_path) if drift_path.exists() else self.reference_counts
+        )
 
     @staticmethod
     def _connect_redis(url: str | None) -> Any:

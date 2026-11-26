@@ -45,7 +45,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         service = None
         yield
         return
-    drift = m.DriftMonitor(reference=service.reference_counts)
+    drift = m.DriftMonitor(
+        reference=service.drift_reference, popularity=service.reference_counts
+    )
     m.MODEL_INFO.info(
         {
             "category": CATEGORY,
@@ -179,4 +181,5 @@ def feedback(event: FeedbackEvent) -> dict[str, str]:
 
 @app.get("/metrics")
 def prometheus_metrics() -> Response:
+    m.update_process_metrics()
     return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)

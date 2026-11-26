@@ -35,7 +35,7 @@ def main() -> None:
         page = browser.new_page(viewport={"width": args.width, "height": args.height})
         for pair in args.pairs:
             name, url = pair.split("=", 1)
-            page.goto(url, wait_until="networkidle", timeout=90_000)
+            page.goto(url, wait_until="domcontentloaded", timeout=90_000)
             page.wait_for_timeout(args.settle_ms)
             path = args.out / f"{name}.png"
             page.screenshot(path=str(path), full_page=args.full_page)

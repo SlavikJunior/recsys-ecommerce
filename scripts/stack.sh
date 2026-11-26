@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
-# Локальный стенд наблюдаемости: Prometheus, Alertmanager, Grafana, node_exporter,
-# приёмник алертов. Всё конфигурируется файлами из deploy/, без ручных кликов.
+# Локальный стенд наблюдаемости.
+#
+# Запуск через tmux: на этой машине launchd отказывается держать часть
+# homebrew-бинарников (EX_CONFIG), а tmux-сессия переживает закрытие терминала
+# и не мешает демонстрации. В отчёте это ограничение указано явно.
+# API запускается через launchd (deploy/deploy.sh), потому что это и есть
+# проверяемый CD-шаг.
 set -euo pipefail
 
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -8,46 +13,40 @@ cd "$PROJECT_DIR"
 
 LOGS="$PROJECT_DIR/artifacts/logs"
 DATA="$PROJECT_DIR/deploy/data"
+SESSION=recsys-stack
 mkdir -p "$LOGS" "$DATA/prometheus" "$DATA/grafana"
 
 start() {
-  if curl -fsS http://127.0.0.1:9090/-/ready >/dev/null 2>&1; then
-    echo "Prometheus уже запущен"
+  if tmux has-session -t "$SESSION" 2>/dev/null; then
+    echo "сессия $SESSION уже запущена"
+    status
     return
   fi
-  /opt/homebrew/opt/node_exporter/bin/node_exporter --web.listen-address=127.0.0.1:9100 \
-    >"$LOGS/node_exporter.log" 2>&1 &
-  /opt/homebrew/opt/prometheus/bin/prometheus \
-    --config.file=deploy/prometheus.yml \
-    --storage.tsdb.path="$DATA/prometheus" \
-    --web.listen-address=127.0.0.1:9090 >"$LOGS/prometheus.log" 2>&1 &
-  ./deploy/bin/alertmanager --config.file=deploy/alertmanager.yml \
-    --storage.path="$DATA/alertmanager" \
-    --web.listen-address=127.0.0.1:9093 >"$LOGS/alertmanager.log" 2>&1 &
-  uv run python scripts/alert_sink.py >"$LOGS/alert_sink.log" 2>&1 &
-  GF_PATHS_PROVISIONING="$PROJECT_DIR/deploy/grafana/provisioning" \
-    GF_PATHS_DATA="$DATA/grafana" \
-    GF_SERVER_HTTP_ADDR=127.0.0.1 \
-    GF_AUTH_ANONYMOUS_ENABLED=true \
-    GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer \
-    /opt/homebrew/opt/grafana/bin/grafana server \
-    --homepath /opt/homebrew/opt/grafana/share/grafana >"$LOGS/grafana.log" 2>&1 &
-  sleep 8
+  tmux new-session -d -s "$SESSION" -c "$PROJECT_DIR" \
+    "node_exporter=1; /opt/homebrew/opt/node_exporter/bin/node_exporter --web.listen-address=127.0.0.1:9100 2>&1 | tee $LOGS/node_exporter.log"
+  tmux new-window -t "$SESSION" -c "$PROJECT_DIR" \
+    "/opt/homebrew/opt/prometheus/bin/prometheus --config.file=$PROJECT_DIR/deploy/prometheus.yml --storage.tsdb.path=$DATA/prometheus --web.listen-address=127.0.0.1:9090 2>&1 | tee $LOGS/prometheus.log"
+  tmux new-window -t "$SESSION" -c "$PROJECT_DIR" \
+    "$PROJECT_DIR/deploy/bin/alertmanager --config.file=$PROJECT_DIR/deploy/alertmanager.yml --storage.path=$DATA/alertmanager --web.listen-address=127.0.0.1:9093 2>&1 | tee $LOGS/alertmanager.log"
+  tmux new-window -t "$SESSION" -c "$PROJECT_DIR" \
+    "PYTHONPATH=$PROJECT_DIR/src $PROJECT_DIR/.venv/bin/python scripts/alert_sink.py 2>&1 | tee $LOGS/alert_sink.log"
+  tmux new-window -t "$SESSION" -c "$PROJECT_DIR" \
+    "GF_PATHS_PROVISIONING=$PROJECT_DIR/deploy/grafana/provisioning GF_PATHS_DATA=$DATA/grafana GF_SERVER_HTTP_ADDR=127.0.0.1 GF_AUTH_ANONYMOUS_ENABLED=true GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer /opt/homebrew/opt/grafana/bin/grafana server --homepath /opt/homebrew/opt/grafana/share/grafana 2>&1 | tee $LOGS/grafana.log"
+  sleep 12
   status
 }
 
 stop() {
-  for port in 3000 9090 9093 9099 9100; do
-    lsof -ti "tcp:$port" | xargs -r kill 2>/dev/null || true
-  done
+  tmux kill-session -t "$SESSION" 2>/dev/null || true
+  launchctl bootout "gui/$UID/com.recsys.api" 2>/dev/null || true
   echo "стенд остановлен"
 }
 
 status() {
-  for name_port in "prometheus:9090/-/ready" "grafana:3000/api/health" "alertmanager:9093/-/ready"; do
+  for name_port in "prometheus:9090/-/ready" "grafana:3000/api/health" "alertmanager:9093/-/ready" "api:8000/health"; do
     name="${name_port%%:*}"
     path="${name_port#*:}"
-    code=$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:$path" || true)
+    code=$(curl -s -o /dev/null -m 3 -w "%{http_code}" "http://127.0.0.1:$path" || true)
     echo "$name: $code"
   done
 }

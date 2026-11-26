@@ -3,26 +3,18 @@
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>com.recsys.api</string>
+  <string>com.recsys.alert-sink</string>
   <key>ProgramArguments</key>
   <array>
-    <string>__PROJECT__/.venv/bin/uvicorn</string>
-    <string>recsys.serving.api:app</string>
-    <string>--host</string>
-    <string>127.0.0.1</string>
-    <string>--port</string>
-    <string>8000</string>
-    <string>--workers</string>
-    <string>1</string>
+    <string>__PROJECT__/.venv/bin/python</string>
+    <string>scripts/alert_sink.py</string>
   </array>
   <key>WorkingDirectory</key>
   <string>__PROJECT__</string>
   <key>EnvironmentVariables</key>
   <dict>
-    <key>RECSYS_CATEGORY</key>
-    <string>Video_Games</string>
-    <key>RECSYS_REDIS_URL</key>
-    <string>redis://127.0.0.1:6379/0</string>
+    <key>PYTHONPATH</key>
+    <string>__PROJECT__/src</string>
     <key>PATH</key>
     <string>/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
   </dict>
@@ -31,8 +23,8 @@
   <key>KeepAlive</key>
   <true/>
   <key>StandardOutPath</key>
-  <string>__PROJECT__/artifacts/logs/api.out.log</string>
+  <string>__PROJECT__/artifacts/logs/alert_sink.log</string>
   <key>StandardErrorPath</key>
-  <string>__PROJECT__/artifacts/logs/api.err.log</string>
+  <string>__PROJECT__/artifacts/logs/alert_sink.err.log</string>
 </dict>
 </plist>

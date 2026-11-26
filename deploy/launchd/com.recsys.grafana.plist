@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.recsys.grafana</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/opt/grafana/bin/grafana</string>
+    <string>server</string>
+    <string>--homepath</string>
+    <string>/opt/homebrew/opt/grafana/share/grafana</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>__PROJECT__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>GF_PATHS_PROVISIONING</key>
+    <string>__PROJECT__/deploy/grafana/provisioning</string>
+    <key>GF_PATHS_DATA</key>
+    <string>__PROJECT__/deploy/data/grafana</string>
+    <key>GF_SERVER_HTTP_ADDR</key>
+    <string>127.0.0.1</string>
+    <key>GF_AUTH_ANONYMOUS_ENABLED</key>
+    <string>true</string>
+    <key>GF_AUTH_ANONYMOUS_ORG_ROLE</key>
+    <string>Viewer</string>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>__PROJECT__/artifacts/logs/grafana.log</string>
+  <key>StandardErrorPath</key>
+  <string>__PROJECT__/artifacts/logs/grafana.err.log</string>
+</dict>
+</plist>

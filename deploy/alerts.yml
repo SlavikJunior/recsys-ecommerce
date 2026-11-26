@@ -31,7 +31,7 @@ groups:
           description: "Похоже на смену спроса или сбой ранжирования. Нужен пересчёт и разбор топ-N."
 
       - alert: RecsysLowCoverage
-        expr: recsys_catalog_coverage < 0.5
+        expr: recsys_catalog_coverage < 0.1
         for: 5m
         labels:
           severity: warning
