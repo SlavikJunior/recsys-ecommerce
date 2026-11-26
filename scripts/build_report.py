@@ -30,10 +30,7 @@ def fmt(value: float, digits: int = 4) -> str:
 def top_table(results: list[dict[str, Any]]) -> str:
     """Две таблицы вместо одной широкой: в PDF широкая не влезает по ширине."""
     ordered = sorted(results, key=lambda r: r["metrics"]["ndcg@10"], reverse=True)
-    accuracy = (
-        "| Модель | Recall@10 | NDCG@10 | Recall@20 | NDCG@20 |\n"
-        "|---|---|---|---|---|\n"
-    )
+    accuracy = "| Модель | Recall@10 | NDCG@10 | Recall@20 | NDCG@20 |\n|---|---|---|---|---|\n"
     quality = (
         "| Модель | Coverage@20 | Novelty@20 | Diversity@20 | Ранжирование, c |\n"
         "|---|---|---|---|---|\n"
